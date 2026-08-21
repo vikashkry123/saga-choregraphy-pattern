@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: payment-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/javatechie
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+
+  cloud:
+    function:
+      definition: paymentProcessor
+
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+
+      bindings:
+        paymentProcessor-in-0:
+          destination: order-event
+          group: payment-service-group
+
+        paymentProcessor-out-0:
+          destination: payment-event
+
+server:
+  port: 8082
